@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Code Assistant Bot</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"/>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        CodeBot
+      </div>
+
+      <div class="mode-section">
+        <p class="label">Mode</p>
+        <div class="mode-list" id="mode-list">
+          <button class="mode-btn active" data-mode="generate">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Generate
+          </button>
+          <button class="mode-btn" data-mode="fix">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Fix Bug
+          </button>
+          <button class="mode-btn" data-mode="explain">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Explain
+          </button>
+          <button class="mode-btn" data-mode="refactor">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.05"/></svg>
+            Refactor
+          </button>
+          <button class="mode-btn" data-mode="convert">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            Convert
+          </button>
+          <button class="mode-btn" data-mode="test">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Write Tests
+          </button>
+        </div>
+      </div>
+
+      <div class="lang-section">
+        <p class="label">Language</p>
+        <select id="language-select">
+          <option>Python</option>
+          <option>JavaScript</option>
+          <option>TypeScript</option>
+          <option>Java</option>
+          <option>C++</option>
+          <option>C#</option>
+          <option>Go</option>
+          <option>Rust</option>
+          <option>PHP</option>
+          <option>Ruby</option>
+          <option>Swift</option>
+          <option>Kotlin</option>
+          <option>SQL</option>
+          <option>HTML/CSS</option>
+          <option>Bash</option>
+        </select>
+
+        <div id="convert-target-row" style="display:none;margin-top:8px">
+          <p class="label">Convert to</p>
+          <select id="target-language-select">
+            <option>JavaScript</option>
+            <option>Python</option>
+            <option>TypeScript</option>
+            <option>Java</option>
+            <option>C++</option>
+            <option>Go</option>
+            <option>PHP</option>
+            <option>Ruby</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <button class="history-btn" onclick="toggleHistory()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        History
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Header -->
+    <div class="main-header">
+      <div id="mode-title" class="mode-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Code Generator
+      </div>
+      <div id="mode-hint" class="mode-hint">Describe what you want to build</div>
+    </div>
+
+    <!-- Input -->
+    <div class="editor-section">
+      <div class="editor-label">
+        <span id="input-label">Your request</span>
+        <button class="clear-btn" onclick="clearAll()">Clear</button>
+      </div>
+      <textarea id="user-input" placeholder="e.g. A function that takes a list of numbers and returns the top 3 largest values" spellcheck="false"></textarea>
+    </div>
+
+    <!-- Run button -->
+    <div class="run-row">
+      <button class="run-btn" id="run-btn" onclick="runMode()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span id="run-label">Generate Code</span>
+      </button>
+      <div class="run-hint" id="run-hint"></div>
+    </div>
+
+    <!-- Output -->
+    <div class="output-section" id="output-section" style="display:none">
+      <div class="output-header">
+        <span id="output-label">Result</span>
+        <div class="output-actions">
+          <button class="icon-btn" onclick="copyOutput()" title="Copy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button class="icon-btn" onclick="downloadOutput()" title="Download">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
+        </div>
+      </div>
+      <div id="output-content" class="output-content"></div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading" style="display:none">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <span id="loading-text">Generating code...</span>
+    </div>
+
+  </main>
+
+  <!-- History Panel -->
+  <div class="history-panel" id="history-panel" style="display:none">
+    <div class="history-header">
+      <span>History</span>
+      <button onclick="toggleHistory()" class="close-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="history-list" class="history-list"></div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>
