@@ -27,10 +27,7 @@ source venv/bin/activate     # Mac/Linux
 # 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Add your API key
-copy .env.example .env       # Windows
-cp .env.example .env         # Mac/Linux
-# Edit .env and add your ANTHROPIC_API_KEY
+
 
 # 5. Run
 python app.py
@@ -107,3 +104,5 @@ code-assistant-bot/
 - Rate limit the `/api/process` endpoint (Flask-Limiter)
 - Deploy on Railway, Render, or Fly.io
 - Set `DEBUG=False` in production
+## Live Demo
+Coming soon...
